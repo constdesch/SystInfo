@@ -1,20 +1,11 @@
-CC=gcc
-AR=ar
-CFLAGS=-g -Wall -W -I/usr/include/SDL
-LDFLAGS=
-SRC=fractal.c tools.c
-OBJ=$(SRC:.c=.o)
-LIBFILE=libfractal.a
+all: exec
 
-all: $(SRC) $(LIBFILE)
+exec: fractal.c lib
+	gcc -o main main.c libfraction/libfractal.a -Ilibfractal/-ILDS
 
-$(LIBFILE): $(OBJ)
+lib:
+	cd libfractal && $(MAKE) clean && $(MAKE)
 
-	$(AR) r $@ $(OBJ)
-
-*.o:
-	$(CC) -o $@ -c $< $(CFLAGS)
-
-gcc -c fractal.c -o fractal.o
-gcc -c main.c -o main.o
-gcc main.o fractal.o -o build
+clean:
+	rm main
+	cd libfractal && $(MAKE) clean
