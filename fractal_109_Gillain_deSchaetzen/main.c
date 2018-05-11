@@ -21,6 +21,7 @@ int NB_FILE = 0;              // Nbre de fichiers totales      //Pointeur de poi
 sbuf_t sp;                //le premier buffer
 sbuf_t sp1;               //le deuxième buffer
 char fichier_out[65];
+
 int main(int argc, char *argv[])
 {
 
@@ -116,6 +117,7 @@ pthread_t* tab;
 
     while (optind < argc-1){ /* s'rrête au dernier fichier in! */
     int error = pthread_create(&tab[a],NULL,producer, argv[optind]); /* On lance les producteurs */
+    if (error != 0){ printf("pthread_create failed"); return -1;}
     int z = strcmp(argv[optind], "file.txt");
     a++;
     optind++;
@@ -129,6 +131,7 @@ if (!maxthreads_flag) {
   int i;
   for (i = 0; i < 4; i++) {
     int error = pthread_create(&tabular[i], NULL, consumer, NULL); /* On lance les consommateurs */
+    if (error != 0){ printf("pthread_create failed"); return -1;}
   }
 }
 else {
@@ -136,11 +139,13 @@ else {
   int i;
   for (i = 0; i < (maxthreads_value); i++) {
     int error = pthread_create(&tabular[i], NULL, consumer, NULL); /* On lance les consommateurs - producteurs */
+    if (error != 0){ printf("pthread_create failed"); return -1;}
   }
 }
 
 pthread_t *compa=(pthread_t*)malloc(sizeof(pthread_t));
 int error = pthread_create(&compa[0],NULL,compare,(void*) &d_flag); /* On lance les deuxiemes consommateurs */
+if (error != 0){ printf("pthread_create failed"); return -1;}
 int id;
 pthread_join(compa[0],(void**)&id);
 printf("id=%d\n",id);

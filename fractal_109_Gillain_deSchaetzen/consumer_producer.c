@@ -37,19 +37,19 @@ void *compare(void* a) {
       fractal_free(f); /* Si f n'est pas la plus grande on peut la free */
     }
   }
-        strcpy(buffer1, fichier_out);
+  strcpy(buffer1, fichier_out);
   printf("fichierout=%s",fichier_out);
   if(leplus==NULL){
     printf("hey\n");
   }
-else{
-        print_fract(leplus);
-        strcat(buffer1,buffer2);
-  printf("%s",buffer1);
-  int error = write_bitmap_sdl(leplus, buffer1);
+  else{
+    print_fract(leplus);
+    strcat(buffer1,buffer2);
+    printf("%s",buffer1);
+    int error = write_bitmap_sdl(leplus, buffer1);
     fractal_free(leplus);
-}
-    sbuf_clean(&sp); /* Libere l'espace alloué pour le premier buffer */
+  }
+  sbuf_clean(&sp); /* Libere l'espace alloué pour le premier buffer */
   sbuf_clean(&sp1); /* Libere l'espace alloué pour le second buffer */
   pthread_exit((void*)1);
   return NULL;
@@ -70,31 +70,32 @@ void *producer(void *fichier) {
   else {
     file = fopen(filename, "r");
     if(file>=0){
-  } /* En lecture seulement */
-  if(strstr(filename,".txt")!=NULL){
-  if (file != NULL) {
-    while (fgets(line, 85, file) != NULL) /* Lire une ligne */
-    {
-      frac_t *  frac;
-      frac= readLine(line);
+    } /* En lecture seulement */
+    if(strstr(filename,".txt")!=NULL){
+      if (file != NULL) {
+        while (fgets(line, 85, file) != NULL) /* Lire une ligne */
+        {
+          frac_t *  frac;
+          frac= readLine(line);
 
-      if (frac != NULL) {
-        sbuf_insert(&sp, frac);
+          if (frac != NULL) {
+            sbuf_insert(&sp, frac);
+          }
+
+        }
+        printf("le fichier %s est fermé \n",filename);
+        fclose(file);
+      }
+      else
+      {
+        perror(file);
+        return NULL;
       }
     }
-    printf("le fichier %s est fermé \n",filename);
-    fclose(file);
+    else{
+      fclose(file);
+    }
   }
-  else
-  {
-    perror(file);
-    return NULL;
-  }
-}
-else{
-fclose(file);
-}
-}
   pthread_mutex_lock(&mutex2); /* Debut de section critique */
   NB_FILE_DOWN++;
   pthread_mutex_unlock(&mutex2); /* Fin de section critique */
@@ -121,7 +122,7 @@ void *consumer(void* a) {
   void sbuf_init(sbuf_t* sbufer,int n)
   {
     sbufer->buf = (frac_t**) malloc(sizeof(frac_t*)*n);
-    if (!sbufer->buf) perror("malloc");
+    if (!sbufer->buf) perror("malloc: ");
     sbufer->n = n;                       /* Taille du buffer */
     sbufer->rear = sbufer->front = 0;    /* Buffer vide si front == rear */
     sem_init(&sbufer->slots, 0, n);      /* Au début, n slots vides */
