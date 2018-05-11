@@ -10,9 +10,15 @@ consumer_producer.o: consumer_producer.c consumer_producer.h
 	gcc consumer_producer.c -c
 
 test:
-	./main input2.txt fileout
+	./main tests/input2.txt fileout -d
 
 clean:
 	rm *.o
 	rm main
 	cd libfractal && $(MAKE) clean
+
+cleanbmp:
+	rm -f *.bmp
+
+valgrind:
+	valgrind --leak-check=full --show-leak-kinds=all ./main --maxthreads 8 tests/file.txt fileout
