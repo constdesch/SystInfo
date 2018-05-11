@@ -6,4 +6,5 @@ Differentes commandes:
   fichier de sortie: fileout
 - make clean pour enlever tous les fichiers compilés.
 - make cleanbmp pour enlever tous les fichiers .bmp
+- make valgrind pour lancer valgrind avec les options --leak-check=full et --show-leak-kinds=all
 
